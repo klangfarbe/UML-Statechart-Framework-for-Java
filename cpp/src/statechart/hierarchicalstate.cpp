@@ -17,9 +17,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
-#include "hierarchicalstate.h"
-#include "concurrentstate.h"
-#include "timeoutevent.h"
+#include <statechart/hierarchicalstate.h>
+#include <statechart/concurrentstate.h>
+#include <statechart/timeoutevent.h>
 
 using namespace statechart;
 using namespace statechart::util;
@@ -28,7 +28,7 @@ using namespace statechart::util;
 
 HierarchicalState::HierarchicalState(Context* parent, Action* entryAction, 
                                      Action* doAction, Action* exitAction, 
-                                     char* name) 
+                                     const char* name) 
 : Context(parent, entryAction, doAction, exitAction, name), history(0) {
   ConcurrentState* c = dynamic_cast<ConcurrentState*>(parent);
   if(c) {

@@ -20,9 +20,10 @@
 #ifndef TIMEOUTEVENTQUEUE
 #define TIMEOUTEVENTQUEUE
 
-#include "eventqueue.h"
-#include "state.h"
-#include "timeoutevent.h"
+#include <statechart/eventqueue.h>
+#include <statechart/state.h>
+#include <statechart/timeoutevent.h>
+#include <assert.h>
 
 namespace statechart {
 

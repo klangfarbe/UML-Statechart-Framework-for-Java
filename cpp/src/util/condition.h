@@ -22,7 +22,7 @@
 
 #include <pthread.h>
 
-#include "mutex.h"
+#include <statechart/util/mutex.h>
 
 namespace statechart {
   namespace util {

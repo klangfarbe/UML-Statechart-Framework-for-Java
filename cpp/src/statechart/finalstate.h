@@ -20,7 +20,7 @@
 #ifndef FINALSTATE_H
 #define FINALSTATE_H
 
-#include "state.h"
+#include <statechart/state.h>
 
 namespace statechart {
 
@@ -32,7 +32,7 @@ namespace statechart {
     /**
      * Creates a new Finalstate.
      */
-    FinalState(Context* parent, char* name = 0) : State(parent, 0, 0, 0, name) {
+    FinalState(Context* parent, const char* name = 0) : State(parent, 0, 0, 0, name) {
     };
   };
 }

@@ -20,8 +20,8 @@
 #ifndef ACTION_H
 #define ACTION_H
 
-#include "metadata.h"
-#include "parameter.h"
+#include <statechart/metadata.h>
+#include <statechart/parameter.h>
 
 namespace statechart {
 

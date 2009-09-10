@@ -20,7 +20,7 @@
 #ifndef PSEUDOSTATE_H
 #define PSEUDOSTATE_H
 
-#include "state.h"
+#include <statechart/state.h>
 
 namespace statechart {
 
@@ -54,7 +54,7 @@ namespace statechart {
     /**
      * Creates a pseudo state with the given type.
      */
-    PseudoState(Context* parent, PseudoStateType type, char* name = 0);
+    PseudoState(Context* parent, PseudoStateType type, const char* name = 0);
 
     /**
      * Does a lookup if this pseudo state can be activated. This is true when

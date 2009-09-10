@@ -22,9 +22,9 @@
 
 #include <pthread.h>
 
-#include "mutex.h"
-#include "scopemutex.h"
-#include "condition.h"
+#include <statechart/util/mutex.h>
+#include <statechart/util/scopemutex.h>
+#include <statechart/util/condition.h>
 
 namespace statechart {
   namespace util {

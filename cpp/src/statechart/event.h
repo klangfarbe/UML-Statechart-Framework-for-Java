@@ -20,9 +20,9 @@
 #ifndef EVENT_H
 #define EVENT_H
 
-#include "metadata.h"
-#include "parameter.h"
-#include "../util/smartpointer.h"
+#include <statechart/metadata.h>
+#include <statechart/parameter.h>
+#include <statechart/util/smartpointer.h>
 
 #include <string>
 
@@ -55,7 +55,7 @@ public: \
     /**
      * Create an event with a name
      */
-    Event(char* id_) :id(id_) {
+    Event(const char* id_) :id(id_) {
     };
 
     /**

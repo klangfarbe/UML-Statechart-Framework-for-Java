@@ -20,7 +20,7 @@
 #ifndef PARAMETER_H
 #define PARAMETER_H
 
-#include "../util/smartpointer.h"
+#include <statechart/util/smartpointer.h>
 
 namespace statechart {
 

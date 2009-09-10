@@ -22,9 +22,9 @@
 
 #include <vector>
 
-#include "state.h"
-#include "pseudostate.h"
-#include "finalstate.h"
+#include <statechart/state.h>
+#include <statechart/pseudostate.h>
+#include <statechart/finalstate.h>
 
 using namespace std;
 
@@ -43,7 +43,7 @@ namespace statechart {
      * Creates a context
      */
     Context(Context* parent, Action* entryAction = 0, Action* doAction = 0, 
-          Action* exitAction = 0, char* name = 0);
+          Action* exitAction = 0, const char* name = 0);
 
     /**
      * Destructor

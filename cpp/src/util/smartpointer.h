@@ -20,8 +20,8 @@
 #ifndef SMARTPOINTER_H
 #define SMARTPOINTER_H
 
-#include "mutex.h"
-#include "scopemutex.h"
+#include <statechart/util/mutex.h>
+#include <statechart/util/scopemutex.h>
 
 namespace statechart {
   namespace util {

@@ -17,8 +17,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
-#include "condition.h"
-#include "time.h"
+#include <statechart/util/condition.h>
+#include <statechart/util/time.h>
 
 #include <errno.h>
 

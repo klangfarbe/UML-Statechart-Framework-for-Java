@@ -24,9 +24,9 @@
 #include <set>
 #include <vector>
 
-#include "event.h"
-#include "parameter.h"
-#include "../util/thread.h"
+#include <statechart/event.h>
+#include <statechart/parameter.h>
+#include <statechart/util/thread.h>
 
 namespace statechart {
 

@@ -20,9 +20,9 @@
 #ifndef GUARD_H
 #define GUARD_H
 
-#include "metadata.h"
-#include "parameter.h"
-#include "../util/smartpointer.h"
+#include <statechart/metadata.h>
+#include <statechart/parameter.h>
+#include <statechart/util/smartpointer.h>
 
 namespace statechart {
 

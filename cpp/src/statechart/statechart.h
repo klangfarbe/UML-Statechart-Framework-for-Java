@@ -21,25 +21,25 @@
 #define STATECHART_H
 
 // Includes are just for convenience. So just this header must be included.
-#include "action.h"
-#include "concurrentstate.h"
-#include "context.h"
-#include "event.h"
-#include "eventqueue.h"
-#include "finalstate.h"
-#include "guard.h"
-#include "hierarchicalstate.h"
-#include "metadata.h"
-#include "parameter.h"
-#include "pseudostate.h"
-#include "state.h"
-#include "statechartexception.h"
-#include "timeoutevent.h"
-#include "timeouteventqueue.h"
-#include "transition.h"
+#include <statechart/action.h>
+#include <statechart/concurrentstate.h>
+#include <statechart/context.h>
+#include <statechart/event.h>
+#include <statechart/eventqueue.h>
+#include <statechart/finalstate.h>
+#include <statechart/guard.h>
+#include <statechart/hierarchicalstate.h>
+#include <statechart/metadata.h>
+#include <statechart/parameter.h>
+#include <statechart/pseudostate.h>
+#include <statechart/state.h>
+#include <statechart/statechartexception.h>
+#include <statechart/timeoutevent.h>
+#include <statechart/timeouteventqueue.h>
+#include <statechart/transition.h>
 
-#include "../util/thread.h"
-#include "../util/smartpointer.h"
+#include <statechart/util/thread.h>
+#include <statechart/util/smartpointer.h>
 
 namespace statechart {
 /**

@@ -22,9 +22,9 @@
 
 #include <map>
 #include <vector>
-#include "../util/time.h"
-#include "../util/mutex.h"
-#include "../util/smartpointer.h"
+#include <statechart/util/time.h>
+#include <statechart/util/mutex.h>
+#include <statechart/util/smartpointer.h>
 
 namespace statechart {
 

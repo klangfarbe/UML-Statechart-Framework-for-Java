@@ -34,7 +34,7 @@ using namespace statechart;
  */
 class TestAction : public Action {
 public:
-  TestAction(char* name, char* action) {
+  TestAction(const char* name, const char* action) {
     this->name = name;
     this->action = action;
   }

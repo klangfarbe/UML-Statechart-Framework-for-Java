@@ -17,11 +17,13 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
-#include "state.h"
-#include "context.h"
-#include "statechart.h"
-#include "timeoutevent.h"
-#include "statechartexception.h"
+#include <statechart/state.h>
+#include <statechart/context.h>
+#include <statechart/statechart.h>
+#include <statechart/timeoutevent.h>
+#include <statechart/statechartexception.h>
+#include <stdlib.h>
+#include <string.h>
 
 using namespace std;
 using namespace statechart;
@@ -30,7 +32,7 @@ using namespace statechart::util;
 //------------------------------------------------------------------------------
 
 State::State(Context* parent, Action* entryAction, Action* doAction, 
-             Action* exitAction, char* name) {
+             Action* exitAction, const char* name) {
   this->context = parent;
   this->statechart = 0;
 
@@ -165,13 +167,13 @@ void State::addTransition(Transition* transition) {
 
 //---------------------------------------------------------------------------
 
-void State::setName(char* name) {
+void State::setName(const char* _name) {
   if(this->name) {
-    free(name);
-    name = 0;
+    free(this->name);
+    this->name = 0;
   }
 
-  if(name) {
-    this->name = strdup(name);
+  if(_name) {
+    this->name = strdup(_name);
   }
 }

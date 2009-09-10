@@ -22,9 +22,9 @@
 
 #include <vector>
 
-#include "event.h"
-#include "guard.h"
-#include "action.h"
+#include <statechart/event.h>
+#include <statechart/guard.h>
+#include <statechart/action.h>
 
 namespace statechart {
 

@@ -17,18 +17,20 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
-#include "pseudostate.h"
-#include "metadata.h"
-#include "hierarchicalstate.h"
-#include "concurrentstate.h"
-#include "statechartexception.h"
+#include <statechart/pseudostate.h>
+#include <statechart/metadata.h>
+#include <statechart/hierarchicalstate.h>
+#include <statechart/concurrentstate.h>
+#include <statechart/statechartexception.h>
+#include <assert.h>
+#include <algorithm>
 
 using namespace statechart;
 using namespace statechart::util;
 
 //------------------------------------------------------------------------------
 
-PseudoState::PseudoState(Context* parent, PseudoStateType type, char* name) 
+PseudoState::PseudoState(Context* parent, PseudoStateType type, const char* name) 
 : State(parent, 0, 0, 0, name) {
   this->type = type;
   if(type == pseudostate_start) {

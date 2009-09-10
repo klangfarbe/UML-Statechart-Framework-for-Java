@@ -20,7 +20,7 @@
 #ifndef HIERARCHICAL_STATE_H
 #define HIERARCHICAL_STATE_H
 
-#include "context.h"
+#include <statechart/context.h>
 
 namespace statechart {
 
@@ -37,7 +37,7 @@ namespace statechart {
      */
     HierarchicalState(Context* parent, Action* entryAction = 0, 
                       Action* doAction = 0, Action* exitAction = 0, 
-                      char* name = 0);
+                      const char* name = 0);
 
   protected:
     /**

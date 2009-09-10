@@ -20,8 +20,8 @@
 #ifndef CONCURRENT_STATE_H
 #define CONCURRENT_STATE_H
 
-#include "context.h"
-#include "hierarchicalstate.h"
+#include <statechart/context.h>
+#include <statechart/hierarchicalstate.h>
 
 namespace statechart {
 
@@ -38,7 +38,7 @@ namespace statechart {
      */
     ConcurrentState(Context* parent, Action* entryAction = 0, 
                     Action* doAction = 0, Action* exitAction = 0, 
-                    char* name = 0);
+                    const char* name = 0);
 
   protected:
     /**

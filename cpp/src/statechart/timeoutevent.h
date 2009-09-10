@@ -20,9 +20,9 @@
 #ifndef TIMEOUT_EVENT_H
 #define TIMEOUT_EVENT_H
 
-#include "event.h"
-#include "metadata.h"
-#include "parameter.h"
+#include <statechart/event.h>
+#include <statechart/metadata.h>
+#include <statechart/parameter.h>
 
 namespace statechart {
 

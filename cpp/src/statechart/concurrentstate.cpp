@@ -17,7 +17,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
-#include "concurrentstate.h"
+#include <statechart/concurrentstate.h>
+#include <algorithm>
 
 using namespace statechart;
 using namespace statechart::util;
@@ -26,7 +27,7 @@ using namespace statechart::util;
 
 ConcurrentState::ConcurrentState(Context* parent, Action* entryAction, 
                                  Action* doAction, Action* exitAction, 
-                                 char* name) 
+                                 const char* name) 
   : Context(parent, entryAction, doAction, exitAction, name) {
 }
 

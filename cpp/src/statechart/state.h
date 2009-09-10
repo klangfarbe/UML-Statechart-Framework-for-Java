@@ -23,12 +23,12 @@
 #include <vector>
 #include <string>
 
-#include "action.h"
-#include "event.h"
-#include "metadata.h"
-#include "parameter.h"
-#include "transition.h"
-#include "../util/smartpointer.h"
+#include <statechart/action.h>
+#include <statechart/event.h>
+#include <statechart/metadata.h>
+#include <statechart/parameter.h>
+#include <statechart/transition.h>
+#include <statechart/util/smartpointer.h>
 
 namespace statechart {
 
@@ -48,7 +48,7 @@ namespace statechart {
      * destroyed when the state ist deleted.
      */
     State(Context* parent, Action* entryAction = 0, Action* doAction = 0, 
-          Action* exitAction = 0, char* name = 0);
+          Action* exitAction = 0, const char* name = 0);
 
     /**
      * The destructor deletes all transition and action objects.
@@ -83,7 +83,7 @@ namespace statechart {
     /**
      * Sets the name of the state used for debugging purposes.
      */
-    void setName(char* name);
+    void setName(const char* name);
 
     /**
      * return the given name
