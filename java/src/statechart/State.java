@@ -199,6 +199,13 @@ public class State {
       if(timeoutEvents != null) {
         for (EventQueueEntry event : timeoutEvents) {
           event.invalid = true;
+          /*
+           * @FIXME
+           * @See Java-Bug ID: 6268068. Proposed fix is to use:
+           * removeAll(Collections.singletonList(event)).  
+           *
+           * Problem: Leads to ConcurrentModificationException. Final fix is in JDK6
+           */
           statechart.timeoutEventQueue.remove(event);
         }
       }
