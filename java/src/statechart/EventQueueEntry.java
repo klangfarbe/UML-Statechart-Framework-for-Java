@@ -72,7 +72,7 @@ public class EventQueueEntry implements Runnable, Delayed {
   public long getDelay(TimeUnit sourceUnit) {
     long ms = System.currentTimeMillis();
     long duration = (timeout + added) - ms;
-    return duration < 0 ? 0 : sourceUnit.convert(duration, TimeUnit.MILLISECONDS);
+    return duration <= 0 ? 0 : sourceUnit.convert(duration, TimeUnit.MILLISECONDS);
   }
 
   // ============================================================================
