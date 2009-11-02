@@ -72,7 +72,7 @@ public class Statechart extends Context implements Runnable {
   //============================================================================
   // ATTRIBUTES
   //============================================================================
-  public static final String VERSION = "0.9.5";
+  public static final String VERSION = "0.9.6";
   private ExecutorService threadpool = null;
   DelayQueue<EventQueueEntry> timeoutEventQueue = new DelayQueue<EventQueueEntry>();
 
