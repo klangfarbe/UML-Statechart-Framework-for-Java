@@ -80,11 +80,11 @@ public class EventQueueEntry implements Runnable, Delayed {
   public int compareTo(Delayed d) {
     if (d instanceof EventQueueEntry) {
       EventQueueEntry entry = (EventQueueEntry)d;
-      if (entry.timeout == timeout) {
+      if (this.equals(entry)) {
         return 0;
-      } else if (timeout < entry.timeout) {
+      } else if (added + timeout < entry.added + entry.timeout) {
         return -1;
-      } else if (timeout > entry.timeout) {
+      } else if (added + timeout > entry.added + entry.timeout) {
         return 1;
       }
     }
@@ -100,23 +100,21 @@ public class EventQueueEntry implements Runnable, Delayed {
    * to check if the event must be removed
    */
   public boolean equals(Object obj) {
-    if (obj instanceof EventQueueEntry) {
-      EventQueueEntry entry = (EventQueueEntry) obj;
-      if (entry.statechart == statechart && entry.data == data) {
-        // if we have a timeout event, it is important to check the state
-        // it will be removed from the delayqueue in the deactivate method 
-        // of a state
-        if (entry.state == state 
-            && event instanceof TimeoutEvent 
-            && entry.event instanceof TimeoutEvent) {
-          return true;
-        } else if (entry.state == state 
-                    && entry.event == event 
-                    && parameter == parameter 
-                    && entry.timeout == timeout) {
-          return true;
-        }
-      }
+    if ((obj == null) || (obj.getClass() != this.getClass())) {
+      return false;
+    }
+    if (obj == this) {
+      return true;
+    }
+    EventQueueEntry entry = (EventQueueEntry) obj;
+    if (entry.statechart == statechart 
+      && entry.data == data
+      && entry.state == state 
+      && entry.event == event 
+      && entry.parameter == parameter 
+      && entry.added == added
+      && entry.timeout == timeout) {
+      return true;
     }
     return false;
   }
