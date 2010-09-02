@@ -39,6 +39,7 @@ public class TimeoutEvent extends Event {
    * @param timeout The timeout value in milliseconds
    */
   public TimeoutEvent(long timeout) {
+    super("TimeoutEvent");
     this.timeout = timeout;
   }
 

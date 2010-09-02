@@ -19,24 +19,30 @@
  */
 package statechart;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
 /**
  * The entry for an asynchronous dispatched event. If necessary the execution 
  * of the event can be delayed for a specific amount of milliseconds.
+ *
+ * @Note This class has a natrual ordering that is inconsistant with equals.
  */
 public class EventQueueEntry implements Runnable, Delayed {
   //============================================================================
   // ATTRIBUTES
   //============================================================================
+  private static AtomicInteger idCounter = new AtomicInteger(1);
   private Statechart statechart = null;
   private State state = null;
   private Metadata data = null;
   private Event event = null;
   private Parameter parameter = null;
-  private long timeout = 0;
+  private long relativeTimeout = 0;
+  private long absoluteTimeout = 0;
   private long added = System.currentTimeMillis();
+  private Integer id;
   volatile boolean invalid = false;
 
   //============================================================================
@@ -48,7 +54,9 @@ public class EventQueueEntry implements Runnable, Delayed {
     this.data = data;
     this.event = event;
     this.parameter = parameter;
-    this.timeout = timeout; 
+    this.relativeTimeout = timeout;
+    this.absoluteTimeout = added + relativeTimeout;
+    this.id = idCounter.getAndIncrement();
   }
 
   //============================================================================
@@ -70,52 +78,63 @@ public class EventQueueEntry implements Runnable, Delayed {
   // Inherited by Delayed
   // ============================================================================
   public long getDelay(TimeUnit sourceUnit) {
-    long ms = System.currentTimeMillis();
-    long duration = (timeout + added) - ms;
+    long currentTime = System.currentTimeMillis();
+    long duration = absoluteTimeout - currentTime;
     return duration <= 0 ? 0 : sourceUnit.convert(duration, TimeUnit.MILLISECONDS);
   }
 
   // ============================================================================
 
+  /*
+   * FIXME The behaviour of this Method is a bit strange in order to handle a bug 
+   * in JDK 5. If used in JDK 6 or newer this method can be changed so that it only
+   * compares the absoluteTimeout.
+   */
   public int compareTo(Delayed d) {
     if (d instanceof EventQueueEntry) {
       EventQueueEntry entry = (EventQueueEntry)d;
-      if (this.equals(entry)) {
+      if (this == entry) {
         return 0;
-      } else if (added + timeout < entry.added + entry.timeout) {
+      } else if (this.absoluteTimeout < entry.absoluteTimeout) {
         return -1;
-      } else if (added + timeout > entry.added + entry.timeout) {
+      } else if (this.absoluteTimeout > entry.absoluteTimeout) {
         return 1;
+      } else {
+        return this.id.compareTo(entry.id);
       }
+    } else {
+      throw new ClassCastException("Cannot compare an object of " 
+          + this.getClass() + " to an object of " + d.getClass());
     }
-    return 0;
   }
 
   // ============================================================================
   // Inherited by Object
   // ============================================================================
   @Override
-  /**
-   * Just checks if the state and data is equal. This is used by the delayQueue
-   * to check if the event must be removed
-   */
-  public boolean equals(Object obj) {
-    if ((obj == null) || (obj.getClass() != this.getClass())) {
-      return false;
-    }
-    if (obj == this) {
-      return true;
-    }
-    EventQueueEntry entry = (EventQueueEntry) obj;
-    if (entry.statechart == statechart 
-      && entry.data == data
-      && entry.state == state 
-      && entry.event == event 
-      && entry.parameter == parameter 
-      && entry.added == added
-      && entry.timeout == timeout) {
-      return true;
-    }
-    return false;
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("EventQueueEntry [id=");
+    builder.append(id);
+    builder.append(", added=");
+    builder.append(added);
+    builder.append(", data=(");
+    builder.append(data);
+    builder.append("), event=");
+    builder.append(event);
+    builder.append(", invalid=");
+    builder.append(invalid);
+    builder.append(", parameter=");
+    builder.append(parameter);
+    builder.append(", state=");
+    builder.append(state);
+    builder.append(", statechart=");
+    builder.append(statechart);
+    builder.append(", relativeTimeout=");
+    builder.append(relativeTimeout);
+    builder.append(", absoluteTimeout=");
+    builder.append(absoluteTimeout);
+    builder.append("]");
+    return builder.toString();
   }
 }

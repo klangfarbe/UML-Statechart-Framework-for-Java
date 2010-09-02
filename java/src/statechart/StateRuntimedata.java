@@ -52,4 +52,24 @@ public class StateRuntimedata {
    * A set of all events which are currently in the timeoutQueue
    */
   public Vector<EventQueueEntry> timeoutEvents = new Vector<EventQueueEntry>();
+
+  //============================================================================
+  // Methods
+  //============================================================================
+	@Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("StateRuntimedata [active=");
+    builder.append(active);
+    builder.append(", currentState=");
+    builder.append(currentState);
+    builder.append(", currentTime=");
+    builder.append(currentTime);
+    builder.append(", stateset=");
+    builder.append(stateset);
+    builder.append(", timeoutEvents=");
+    builder.append(timeoutEvents);
+    builder.append("]");
+    return builder.toString();
+	}
 }
