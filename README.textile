@@ -309,7 +309,7 @@ new Transition(j, b, new ValueEquals(0));
 new Transition(j, a_final);
 new Transition(a, final);
 
-p. That is all you have to do to implement the statechart. The next section will explain how to use.
+p. That is all you have to do to implement the statechart. The next section will explain how to use it.
 
 h2. Usage
 
