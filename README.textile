@@ -335,6 +335,8 @@ I hope that this short introduction helps you implementing your own statecharts.
 h1. References
 
 fn. 1 Harel, David: "Statecharts: A Visual Formalism for Complex Systems":http://www.wisdom.weizmann.ac.il/~dharel/SCANNED.PAPERS/Statecharts.pdf. In: Science of Computer Programming 8 (1987), June, Nr. 3, Pages 231-274
+
 fn. 2 Gamma, Erich ; Helm, Richard ; Johnson, Ralph ; Vlissides, John: Design Patterns - Elements of Reusable Object-Oriented Software. Addison-Wesley, 1995.
+
 fn. 3 Mocek, Christian: "Erweiterung des CASE-Werkzeugs DAVE um einen Code-Generator für LEGO Mindstorms":ftp://ls10-ftp.cs.uni-dortmund.de/pub/Diplom-Arbeiten/da_Christian_Mocek.pdf. Diploma-Thesis, 2006, Software-Technology, University of Dortmund, Germany.
 
