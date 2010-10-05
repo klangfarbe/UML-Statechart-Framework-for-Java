@@ -27,7 +27,7 @@ import statechart.State;
 import statechart.Statechart;
 import statechart.StatechartException;
 
-public class Unittests {
+public class SemanticTests {
   @Test
   public void testEventQueue() throws StatechartException, InterruptedException {
     Statechart chart = TestCharts.t2();
