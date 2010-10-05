@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
@@ -47,7 +47,7 @@ public class Statechart extends Context implements Runnable {
     private int threadCount = 0;
     private boolean makeDaemonThreads = false;
     private ThreadGroup threadGroup = null;
-    
+
     //============================================================================
     // METHODS
     //============================================================================
@@ -56,9 +56,9 @@ public class Statechart extends Context implements Runnable {
       this.id = id;
       threadGroup = new ThreadGroup(id);
     }
-    
+
     //==========================================================================
-    
+
     public Thread newThread(Runnable r) {
       String name = null;
       synchronized (this) {
@@ -70,7 +70,7 @@ public class Statechart extends Context implements Runnable {
       return t;
     }
   }
-  
+
   //============================================================================
   // ATTRIBUTES
   //============================================================================
@@ -85,7 +85,7 @@ public class Statechart extends Context implements Runnable {
   /**
    * Creates the Statechart with the given default and maximum number of
    * threads.
-   * 
+   *
    * @param name The name of the statechart. This must be unique for all
    *          statecharts in the running JVM.
    * @param threads The maximum number of threads available in the
@@ -98,22 +98,22 @@ public class Statechart extends Context implements Runnable {
     super(name, null, null, null, null);
     // we need at least two threads for asynchronous and timeout events
     if(threads < 2) {
-      threads = 2; 
+      threads = 2;
     }
     threadpool = Executors.newFixedThreadPool(threads, new StatechartThreadFactory(name, makeDaemonThreads));
     threadpool.execute(this);
   }
-  
+
   //============================================================================
 
   /**
-   * Shutdown of the threadpool. The pool waits 60 seconds at most before 
+   * Shutdown of the threadpool. The pool waits 60 seconds at most before
    * shutting down hard.
-   * 
-   * @throws InterruptedException 
+   *
+   * @throws InterruptedException
    */
   public synchronized void shutdown() {
-    threadpool.shutdown();    
+    threadpool.shutdown();
     timeoutEventQueue.clear();
     // send an empty event to the queue to get back from the delay queues take method
     timeoutEventQueue.add(new EventQueueEntry(this, this, null, null, null, 0));
@@ -144,6 +144,32 @@ public class Statechart extends Context implements Runnable {
     data.activate(this);
     data.activate(startState);
     return dispatch(data, null, parameter);
+  }
+
+  //============================================================================
+
+  /**
+   * Sets a new data object to continue from the given state. This is usually
+   * needed for persistance to restore the state after a restart of the JVM
+   * or if the data object was deleted sometime ago.
+   */
+  public boolean restoreState(State state, Metadata data, Parameter parameter) {
+    if(data.isActive(this)) {
+      return false;
+    }
+    data.reset();
+    // get the path from the state to the root
+    Vector<State> path = new Vector<State>();
+    State parent = state;
+    do {
+      path.add(0, parent);
+      parent = parent.context;
+    } while(parent != null);
+
+    for (State s : path) {
+      s.activate(data, parameter);
+    }
+    return true;
   }
 
   //============================================================================
@@ -232,7 +258,7 @@ public class Statechart extends Context implements Runnable {
    * Since every state must have a unique name, it is possible to get the
    * state object by name.
    */
-  public final State getStateByName(String string) { 
+  public final State getStateByName(String string) {
     return states.get(string);
   }
 
@@ -251,8 +277,8 @@ public class Statechart extends Context implements Runnable {
         // ignore the exception. Just run the next loop and take method if
         // necessary
       } catch (RejectedExecutionException e) {
-        // Normally this means that the threadpool has been shutted down  
-      }      
+        // Normally this means that the threadpool has been shutted down
+      }
     }
   }
 }
