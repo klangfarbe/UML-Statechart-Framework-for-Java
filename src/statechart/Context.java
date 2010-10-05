@@ -32,7 +32,7 @@ public abstract class Context extends State {
   //============================================================================
   // METHODS
   //============================================================================
-  public Context(Context parent, Action entryAction, Action doAction, Action exitAction) throws StatechartException {
-    super(parent, entryAction, doAction, exitAction);
+  public Context(String name, Context parent, Action entryAction, Action doAction, Action exitAction) throws StatechartException {
+    super(name, parent, entryAction, doAction, exitAction);
   }  
 }

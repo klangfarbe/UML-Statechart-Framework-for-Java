@@ -49,8 +49,8 @@ public class PseudoState extends State {
    * Creates a pseudo state with the given type.
    * @throws StatechartException 
    */
-  public PseudoState(Context parent, int type) throws StatechartException {        
-    super(parent, null, null, null);
+  public PseudoState(String name, Context parent, int type) throws StatechartException {
+    super(name, parent, null, null, null);
     this.type = type;
     if(type == pseudostate_start) {
       if(parent.startState == null) {

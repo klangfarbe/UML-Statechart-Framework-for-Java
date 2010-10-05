@@ -27,7 +27,7 @@ public class FinalState extends State {
    * Creates a new Finalstate.
    * @throws StatechartException 
    */
-  public FinalState(Context parent) throws StatechartException {
-    super(parent, null, null, null);
+  public FinalState(String name, Context parent) throws StatechartException {
+    super(name, parent, null, null, null);
   };
 }

@@ -57,9 +57,12 @@ public class State {
    * Creates a state with the given actions. 
    * @throws StatechartException 
    */
-  public State(Context parent, Action entryAction, Action doAction, Action exitAction) throws StatechartException {
+  public State(String name, Context parent, Action entryAction, Action doAction, Action exitAction) throws StatechartException {
     if(parent == null && !(this instanceof Statechart)) {
       throw new StatechartException("Parameter parent cannot be null");
+    }
+    if(name == null) {
+      throw new StatechartException("Parameter name cannot be null");
     }
     
     this.context = parent;
@@ -71,11 +74,16 @@ public class State {
       }
       if(parent instanceof Statechart) {
         this.statechart = (Statechart)parent;
+        if(this.statechart.states.containsKey(name)) {
+          throw new StatechartException("State name <" + name + "> already used! Please define a unique name.");
+        }
+        this.statechart.states.put(name, this);
       } else {
         throw new StatechartException("Cannot determine path to the statechart. Check the hierarchy.");
       }
     }
-    
+
+    this.name = name;
     this.entryAction = entryAction;
     this.doAction = doAction;
     this.exitAction = exitAction;    

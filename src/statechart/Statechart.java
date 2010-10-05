@@ -19,6 +19,8 @@
  */
 package statechart;
 
+import java.util.HashMap;
+import java.util.Vector;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -55,7 +57,7 @@ public class Statechart extends Context implements Runnable {
       threadGroup = new ThreadGroup(id);
     }
     
-    // =========================================================================
+    //==========================================================================
     
     public Thread newThread(Runnable r) {
       String name = null;
@@ -72,9 +74,10 @@ public class Statechart extends Context implements Runnable {
   //============================================================================
   // ATTRIBUTES
   //============================================================================
-  public static final String VERSION = "1.0.0";
+  public static final String VERSION = "1.1.0";
   private ExecutorService threadpool = null;
   DelayQueue<EventQueueEntry> timeoutEventQueue = new DelayQueue<EventQueueEntry>();
+  HashMap<String, State> states = new HashMap<String, State>();
 
   //============================================================================
   // METHODS
@@ -92,8 +95,7 @@ public class Statechart extends Context implements Runnable {
    * @throws StatechartException
    */
   public Statechart(String name, int threads, boolean makeDaemonThreads) throws StatechartException {
-    super(null, null, null, null);
-    this.name = name;
+    super(name, null, null, null, null);
     // we need at least two threads for asynchronous and timeout events
     if(threads < 2) {
       threads = 2; 
@@ -222,6 +224,16 @@ public class Statechart extends Context implements Runnable {
         threadpool.execute(new EventQueueEntry(this, this, data, event, parameter, 0));
       }
     }
+  }
+
+  //============================================================================
+
+  /**
+   * Since every state must have a unique name, it is possible to get the
+   * state object by name.
+   */
+  public final State getStateByName(String string) { 
+    return states.get(string);
   }
 
   //============================================================================

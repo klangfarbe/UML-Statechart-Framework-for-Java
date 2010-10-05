@@ -35,8 +35,8 @@ public class HierarchicalState extends Context {
    * Creates a simple OR-composite-state with the given actions.
    * @throws StatechartException 
    */
-  public HierarchicalState(Context parent, Action entryAction, Action doAction, Action exitAction) throws StatechartException {
-    super(parent, entryAction, doAction, exitAction);
+  public HierarchicalState(String name, Context parent, Action entryAction, Action doAction, Action exitAction) throws StatechartException {
+    super(name, parent, entryAction, doAction, exitAction);
     
     if(parent instanceof ConcurrentState) {
       ((ConcurrentState)parent).addRegion(this);

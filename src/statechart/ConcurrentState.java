@@ -40,8 +40,8 @@ public class ConcurrentState extends Context {
    * Creates a simple OR-composite-state with the given actions.
    * @throws StatechartException 
    */
-  public ConcurrentState(Context parent, Action entryAction, Action doAction, Action exitAction) throws StatechartException {
-    super(parent, entryAction, doAction, exitAction);
+  public ConcurrentState(String name, Context parent, Action entryAction, Action doAction, Action exitAction) throws StatechartException {
+    super(name, parent, entryAction, doAction, exitAction);
   }  
 
   //============================================================================
