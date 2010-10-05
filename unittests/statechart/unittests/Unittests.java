@@ -832,4 +832,32 @@ public class Unittests {
     Assert.assertEquals(result, parameter.path);
     chart.shutdown();
   }
+  
+  // Checks the deep history state when the transition is made from the substate
+  @Test  
+  public void testSemantics29() throws StatechartException {
+    Statechart chart = TestCharts.h5();
+    
+    TestEvent event2 = new TestEvent(2);
+    TestEvent event3 = new TestEvent(3);
+    TestEvent event4 = new TestEvent(4);
+    TestEvent event5 = new TestEvent(5);
+    TestParameter parameter = new TestParameter();
+    Metadata data = new Metadata();
+
+    Assert.assertTrue(chart.start(data, parameter));
+    Assert.assertTrue(chart.dispatch(data, event2, parameter));
+    Assert.assertTrue(chart.dispatch(data, event4, parameter));
+    Assert.assertTrue(chart.dispatch(data, event5, parameter));
+    Assert.assertTrue(chart.dispatch(data, event3, parameter));
+    
+    String result = "D:start A:p A:start p D:start p U:history p A:a D:a ";
+    result += "A:q A:start q D:start q A:b D:b A:c D:c D:q D:p A:d D:d A:p ";
+    result += "A:start p D:start p A:q A:c D:c D:q A:end p D:end p D:p A:end";
+
+    Assert.assertEquals(result, parameter.path);
+    chart.shutdown();
+  }
+
 }
+

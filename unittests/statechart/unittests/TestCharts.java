@@ -239,6 +239,7 @@ public class TestCharts {
     State s1 = new State(h1, new TestAction("a", "A"), null, new TestAction("a", "D"));
     State s2 = new State(h2, new TestAction("b", "A"), null, new TestAction("b", "D"));
     State s3 = new State(h2, new TestAction("c", "A"), null, new TestAction("c", "D"));
+    State s4 = new State(chart, new TestAction("d", "A"), null, new TestAction("d", "D"));
     State p1 = new PseudoState(chart, PseudoState.pseudostate_start);
     State p2 = new FinalState(chart);
     State p3 = new PseudoState(h1, PseudoState.pseudostate_start);
@@ -267,6 +268,8 @@ public class TestCharts {
     new Transition(p5, s2);
     new Transition(s2, s3, new TestEvent(4));
     new Transition(s3, s2, new TestEvent(4));
+    new Transition(s3, s4, new TestEvent(5));
+    new Transition(s4, h1);
 
     return chart;
   }

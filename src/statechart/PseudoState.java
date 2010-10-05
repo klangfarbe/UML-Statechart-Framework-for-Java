@@ -223,7 +223,8 @@ public class PseudoState extends State {
     }
 
     if (s instanceof HierarchicalState) {
-      State substate = data.getData((HierarchicalState) s).currentState;
+      StateRuntimedata runtimedata = data.getData((HierarchicalState) s);
+      State substate = runtimedata != null ? runtimedata.currentState : null;
       if (substate != null) {
         calculate(history, substate, data, type);
       }
