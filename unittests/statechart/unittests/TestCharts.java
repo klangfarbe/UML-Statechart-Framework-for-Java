@@ -307,7 +307,7 @@ public class TestCharts {
     State p3 = new PseudoState("start p-r1", h1, PseudoState.pseudostate_start);
     State p4 = new FinalState("end p-r1", h1);
     State p5 = new PseudoState("start p-r2", h2, PseudoState.pseudostate_start);
-    State p6 = new FinalState("end p-r1", h2);
+    State p6 = new FinalState("end p-r2", h2);
     p1.setEntryAction(new TestAction("start", "A"));
     p1.setExitAction(new TestAction("start", "D"));
     p2.setEntryAction(new TestAction("end", "A"));
@@ -346,7 +346,7 @@ public class TestCharts {
     State p3 = new PseudoState("start p-r1", h1, PseudoState.pseudostate_start);
     State p4 = new FinalState("end p-r1", h1);
     State p5 = new PseudoState("start p-r2", h2, PseudoState.pseudostate_start);
-    State p6 = new FinalState("end p-r1", h2);
+    State p6 = new FinalState("end p-r2", h2);
     p1.setEntryAction(new TestAction("start", "A"));
     p1.setExitAction(new TestAction("start", "D"));
     p2.setEntryAction(new TestAction("end", "A"));

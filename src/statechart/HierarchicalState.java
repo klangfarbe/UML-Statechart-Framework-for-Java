@@ -131,12 +131,15 @@ public class HierarchicalState extends Context {
       }
 
       /*
-       * If the endstate is active remove the event because a finishing transition
-       * has never an event. If we don't remove it here, we'll get stuck in the
-       * endstate!!!
+       * If the endstate is active and the transition is a finishing transition 
+       * (it has not event), trigger the transition without the event.
+       * 
+       * Otherwise try to trigger the transition with the event.
        */
-      if(statedata.currentState instanceof FinalState) {
-        event = null;
+      if(statedata.currentState instanceof FinalState && !t.hasEvent()) {
+        if(t.execute(null, data, parameter)) {
+          return true;
+        }
       }
 
       // try to fire the transision
