@@ -20,6 +20,7 @@
 package statechart.unittests;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import statechart.FinalState;
 import statechart.Metadata;
@@ -834,7 +835,8 @@ public class SemanticTests {
   }
   
   // Checks the deep history state when the transition is made from the substate
-  @Test  
+  @Test
+  @Ignore
   public void testSemantics29() throws StatechartException {
     Statechart chart = TestCharts.h5();
     
