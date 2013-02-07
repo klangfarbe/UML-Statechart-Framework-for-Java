@@ -19,6 +19,8 @@
  */
 package statechart;
 
+import java.util.UUID;
+
 /**
  * Timeout event for a transition
  */
@@ -30,6 +32,7 @@ public class TimeoutEvent extends Event {
    * The timeout value in milliseconds
    */
   private long timeout;
+  private UUID uuid = UUID.randomUUID();
   
   //============================================================================
   // METHODS
@@ -54,7 +57,7 @@ public class TimeoutEvent extends Event {
    * @param param The parameter for this event. Must be a TimeoutParameter type.
    */
   public boolean equals(Event event, Metadata data, Parameter param) {
-    if(event instanceof TimeoutEvent) {
+    if(event instanceof TimeoutEvent && ((TimeoutEvent)event).uuid == this.uuid) {
       return true;
     }
     return false;

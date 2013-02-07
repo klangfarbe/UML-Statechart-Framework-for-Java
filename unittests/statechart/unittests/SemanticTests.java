@@ -20,6 +20,7 @@
 package statechart.unittests;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import statechart.FinalState;
 import statechart.Metadata;
@@ -28,6 +29,22 @@ import statechart.Statechart;
 import statechart.StatechartException;
 
 public class SemanticTests {
+  
+  void waitForFinalState(Statechart chart, Metadata data) {
+    // Wait until the statechart reached its final state
+    State current = null; 
+    while(current == null || !(current instanceof FinalState)) {      
+      try {
+        Thread.sleep(100);
+      } catch (InterruptedException e) {
+        // Ignore this...
+      }
+      synchronized(data) {
+        current = data.getData(chart).currentState;
+      }
+    }
+  }
+  
   @Test
   public void testEventQueue() throws StatechartException, InterruptedException {
     Statechart chart = TestCharts.t2();
@@ -40,15 +57,7 @@ public class SemanticTests {
     chart.startAsynchron(data, parameter);    
     chart.dispatchAsynchron(data, s1, parameter);
     chart.dispatchAsynchron(data, s2, parameter); 
-    
-    // Wait until the statechart reached its final state
-    State current = null; 
-    while(current == null || !(current instanceof FinalState)) {      
-      Thread.sleep(100);
-      synchronized(data) {
-        current = data.getData(chart).currentState;
-      }
-    }
+    waitForFinalState(chart, data);
     chart.shutdown();
     Assert.assertEquals("D:start A:a D:a A:a D:a A:end", parameter.path);
   }
@@ -112,15 +121,7 @@ public class SemanticTests {
     Metadata data = new Metadata();
 
     Assert.assertTrue(chart.start(data, parameter));
-
-    State current = null; 
-    while(current == null || !(current instanceof FinalState)) {      
-      Thread.sleep(100);
-      synchronized(data) {
-        current = data.getData(chart).currentState;
-      }
-    }
-
+    waitForFinalState(chart, data);
     Assert.assertEquals("D:start A:a D:a A:end", parameter.path);
     chart.shutdown();
   }
@@ -732,15 +733,8 @@ public class SemanticTests {
     Metadata data = new Metadata();
 
     Assert.assertTrue(chart.start(data, parameter));
-    
-    State current = null; 
-    while(current == null || !(current instanceof FinalState)) {      
-      Thread.sleep(100);
-      synchronized(data) {
-        current = data.getData(chart).currentState;
-      }
-    }
-    
+    waitForFinalState(chart, data);
+   
     String result = "D:start ";
     result += "A:p ";
     result += "A:p-r1 ";
@@ -834,7 +828,10 @@ public class SemanticTests {
   }
   
   // Checks the deep history state when the transition is made from the substate
+  // Be aware that this does not work with a correct semantics but we make sure
+  // that no NullPointerException occurs. See commit 575482c6 for information
   @Test  
+  @Ignore
   public void testSemantics29() throws StatechartException {
     Statechart chart = TestCharts.h5();
     
@@ -859,5 +856,28 @@ public class SemanticTests {
     chart.shutdown();
   }
 
+  // Statechart for Issue #2 - Timeouts in concurrent states
+  @Test
+  public void testSemantics30() throws StatechartException {
+    Statechart chart = TestCharts.c11();
+    TestParameter parameter = new TestParameter();
+    Metadata data = new Metadata();
+    Assert.assertTrue(chart.start(data, parameter));
+    waitForFinalState(chart, data);
+
+    String result =
+        "D:start A:p " + 
+            "A:p-r1 A:start p-r1 D:start p-r1 A:a " + 
+            "A:p-r2 A:start p-r2 D:start p-r2 A:b " + 
+            "D:b E:t2 A:end p-r2 " + 
+            "D:a E:t1 A:end p-r1 " + 
+            "D:end p-r1 D:p-r1 " + 
+            "D:end p-r2 D:p-r2 " + 
+            "D:p " + 
+            "A:end";
+
+    Assert.assertEquals(result, parameter.path);
+    chart.shutdown();
+  }
 }
 

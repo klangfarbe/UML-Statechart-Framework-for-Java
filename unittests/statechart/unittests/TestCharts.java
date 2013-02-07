@@ -651,4 +651,41 @@ public class TestCharts {
     new Transition(s2, s3, new TestEvent(2));
     return chart;
   }
+
+  // test statechart for Issue #2 - Timeouts in concurrent states
+  static Statechart c11() throws StatechartException {
+    Statechart chart = new Statechart("c10", 10, false);
+    ConcurrentState n1 = new ConcurrentState("p", chart, new TestAction("p", "A"), null, new TestAction("p", "D"));
+    HierarchicalState h1 = new HierarchicalState("p-r1", n1, new TestAction("p-r1", "A"), null, new TestAction("p-r1", "D"));
+    HierarchicalState h2 = new HierarchicalState("p-r2", n1, new TestAction("p-r2", "A"), null, new TestAction("p-r2", "D"));
+    State s1 = new State("a", h1, new TestAction("a", "A"), null, new TestAction("a", "D"));
+    State s2 = new State("b", h2, new TestAction("b", "A"), null, new TestAction("b", "D"));
+    State p1 = new PseudoState("start", chart, PseudoState.pseudostate_start);
+    State p2 = new FinalState("end", chart);
+    State p3 = new PseudoState("start p-r1", h1, PseudoState.pseudostate_start);
+    State p4 = new FinalState("end p-r1", h1);
+    State p5 = new PseudoState("start p-r2", h2, PseudoState.pseudostate_start);
+    State p6 = new FinalState("end p-r2", h2);
+    p1.setEntryAction(new TestAction("start", "A"));
+    p1.setExitAction(new TestAction("start", "D"));
+    p2.setEntryAction(new TestAction("end", "A"));
+    p2.setExitAction(new TestAction("end", "D"));
+    p3.setEntryAction(new TestAction("start p-r1", "A"));
+    p3.setExitAction(new TestAction("start p-r1", "D"));
+    p4.setEntryAction(new TestAction("end p-r1", "A"));
+    p4.setExitAction(new TestAction("end p-r1", "D"));
+    p5.setEntryAction(new TestAction("start p-r2", "A"));
+    p5.setExitAction(new TestAction("start p-r2", "D"));
+    p6.setEntryAction(new TestAction("end p-r2", "A"));
+    p6.setExitAction(new TestAction("end p-r2", "D"));
+
+    new Transition(p1, n1);
+    new Transition(p3, s1);
+    new Transition(s1, p4, new TimeoutEvent(500), new TestAction("t1", "E"));
+    new Transition(p5, s2);
+    new Transition(s2, p6, new TimeoutEvent(250), new TestAction("t2", "E"));
+    new Transition(n1, p2);
+
+    return chart;
+  }
 }
