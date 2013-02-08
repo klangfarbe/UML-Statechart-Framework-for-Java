@@ -879,5 +879,29 @@ public class SemanticTests {
     Assert.assertEquals(result, parameter.path);
     chart.shutdown();
   }
+  
+  @Test
+  public void testInternalTransaction() throws StatechartException {
+    Statechart chart = TestCharts.t5();
+    TestParameter parameter = new TestParameter();
+    Metadata data = new Metadata();
+    Assert.assertTrue(chart.start(data, parameter));
+    Assert.assertTrue(chart.dispatch(data, new TestEvent(1), parameter));
+    Assert.assertTrue(chart.dispatch(data, new TestEvent(2), parameter));
+    Assert.assertTrue(chart.dispatch(data, new TestEvent(3), parameter));
+
+    String result =
+    // event 1
+        "D:start E:t1 A:a " +
+    // event 2
+        "D:a E:t2 A:a " +
+    // event 3
+        "E:t3 " + 
+    // event 4
+        "D:a E:t4 A:end";
+
+    Assert.assertEquals(result, parameter.path);
+    chart.shutdown();
+  }
 }
 

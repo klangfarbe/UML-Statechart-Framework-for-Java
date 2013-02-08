@@ -22,6 +22,7 @@ package statechart.unittests;
 import statechart.ConcurrentState;
 import statechart.FinalState;
 import statechart.HierarchicalState;
+import statechart.InternalTransition;
 import statechart.PseudoState;
 import statechart.State;
 import statechart.Statechart;
@@ -686,6 +687,25 @@ public class TestCharts {
     new Transition(s2, p6, new TimeoutEvent(250), new TestAction("t2", "E"));
     new Transition(n1, p2);
 
+    return chart;
+  }
+  
+  // test statechart for internal transitions in a state
+  static Statechart t5() throws StatechartException {
+    Statechart chart = new Statechart("t1", 10, false);
+    State s1 = new State("a", chart, new TestAction("a", "A"), null, new TestAction("a", "D"));
+    State p1 = new PseudoState("start", chart, PseudoState.pseudostate_start);
+    State p2 = new FinalState("end", chart);
+    p1.setEntryAction(new TestAction("start", "A"));
+    p1.setExitAction(new TestAction("start", "D"));
+    p2.setEntryAction(new TestAction("end", "A"));
+    p2.setExitAction(new TestAction("end", "D"));
+    
+    new Transition(p1, s1, new TestAction("t1", "E"));
+    new Transition(s1, s1, new TestEvent(1), new TestAction("t2", "E"));
+    new InternalTransition(s1, new TestEvent(2), new TestAction("t3", "E"));
+    new Transition(s1, p2, new TestEvent(3), new TestAction("t4", "E"));
+    
     return chart;
   }
 }
