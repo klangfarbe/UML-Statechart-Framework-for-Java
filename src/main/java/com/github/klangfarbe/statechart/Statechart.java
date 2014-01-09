@@ -28,6 +28,8 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
+
 /**
  * The main entry point for using the statechart framework. Contains all
  * necessary methods for delegating incoming events to the substates. When
@@ -35,6 +37,8 @@ import java.util.concurrent.TimeUnit;
  * will be deleted automatically.
  */
 public class Statechart extends Context implements Runnable {
+    private static final Logger LOGGER = Logger.getLogger(Statechart.class);
+
     /**
      * Creates the threads for the ThreadPoolExecutor. These threads may be
      * daemon or non-daemon threads.
@@ -248,6 +252,7 @@ public class Statechart extends Context implements Runnable {
      */
     public void dispatchAsynchron(Metadata data, Event event, Parameter parameter) {
         if (!threadpool.isShutdown()) {
+            LOGGER.debug("Received event '" + event + "'.");
             if (event instanceof TimeoutEvent) {
                 timeoutEventQueue.add(new EventQueueEntry(this, this, data, event, parameter, ((TimeoutEvent) event).getTimout()));
             } else {

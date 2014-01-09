@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 /**
  * Describes runtime specific data of the statechart. The main data is the
  * currently active state, or in general all actives when using hierarchy. For
@@ -158,7 +160,7 @@ public class Metadata {
     public void reset() {
         activeStates.clear();
         statechart = null;
-  }
+    }
 
     public Set<State> getActiveStates() {
         return activeStates.keySet();
@@ -176,7 +178,7 @@ public class Metadata {
                 continue;
             }
             isRunning = isRunning && !(state instanceof FinalState);
-  }
+        }
 
         return isRunning;
     }
