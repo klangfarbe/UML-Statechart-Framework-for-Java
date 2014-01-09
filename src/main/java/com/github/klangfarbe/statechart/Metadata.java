@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 /**
  * Describes runtime specific data of the statechart. The main data is the
  * currently active state, or in general all actives when using hierarchy. For
@@ -31,6 +33,7 @@ import java.util.Set;
  * object is allocated only when the state is active, otherwise it is deleted.
  */
 public class Metadata {
+    private static final Logger LOGGER = Logger.getLogger(Metadata.class);
     // ============================================================================
     // ATTRIBUTES
     // ============================================================================
@@ -85,6 +88,7 @@ public class Metadata {
         if (state instanceof Statechart) {
             this.statechart = (Statechart) state;
         }
+        LOGGER.debug("Activate state '" + state + "'.");
         StateRuntimedata data = getData(state);
         if (data == null) {
             data = new StateRuntimedata();
