@@ -17,26 +17,22 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
-package statechart.unittests;
+package com.github.klangfarbe.statechart;
 
-import statechart.Action;
-import statechart.Metadata;
-import statechart.Parameter;
+/**
+ * Domain of the state. Needed for setting up the hierarchy. This class must
+ * never be instantiated directly.
+ */
+public abstract class Context extends State {
+    // ============================================================================
+    // ATTRIBUTES
+    // ============================================================================
+    protected PseudoState startState = null;
 
-public class TestAction implements Action {
-  public TestAction(String name, String action) {
-    this.name = name;
-    this.action = action;
-  }
-
-  public void execute(Metadata data, Parameter param) {
-    TestParameter parameter = (TestParameter) param;
-    parameter.path += 
-        (parameter.path.length() != 0 ? " " : "") 
-        + action + ":" + name;
-  };
-
-  private String name;
-
-  private String action;
+    // ============================================================================
+    // METHODS
+    // ============================================================================
+    public Context(String name, Context parent, Action entryAction, Action doAction, Action exitAction) throws StatechartException {
+        super(name, parent, entryAction, doAction, exitAction);
+    }
 }

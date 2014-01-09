@@ -17,19 +17,17 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
-package statechart;
+package com.github.klangfarbe.statechart;
 
 /**
- * Interface for an action which can be called by a transition or state.
+ * Baseclass for call parameter. All Parameters must have the ability to store
+ * the current time of the active state. This value is set by every state
+ * itself.
  */
-public interface Action {
-  /**
-   * Called by the state or transition.
-   * 
-   * @param data
-   *          The runtime data object
-   * @param param
-   *          The parameter for this action
-   */
-  void execute(Metadata data, Parameter param);
+public class Parameter {
+    /**
+     * Creates a parameter
+     */
+    public Parameter() {
+    };
 }

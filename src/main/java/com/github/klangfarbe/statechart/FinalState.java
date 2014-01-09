@@ -17,22 +17,18 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
-package statechart;
+package com.github.klangfarbe.statechart;
 
 /**
- * Domain of the state. Needed for setting up the hierarchy. This class must
- * never be instantiated directly.
+ * The final state of a statechart or substate
  */
-public abstract class Context extends State {
-  //============================================================================
-  // ATTRIBUTES
-  //============================================================================
-  protected PseudoState startState = null;
-  
-  //============================================================================
-  // METHODS
-  //============================================================================
-  public Context(String name, Context parent, Action entryAction, Action doAction, Action exitAction) throws StatechartException {
-    super(name, parent, entryAction, doAction, exitAction);
-  }  
+public class FinalState extends State {
+    /**
+     * Creates a new Finalstate.
+     * 
+     * @throws StatechartException
+     */
+    public FinalState(String name, Context parent) throws StatechartException {
+        super(name, parent, null, null, null);
+    };
 }
