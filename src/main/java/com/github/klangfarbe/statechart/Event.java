@@ -29,7 +29,7 @@ public abstract class Event {
     /**
      * The ID of the event
      */
-    String id = new String();
+    private String id = new String();
 
     // ============================================================================
     // METHODS
@@ -38,7 +38,7 @@ public abstract class Event {
      * Creates an event
      */
     public Event() {
-    };
+    }
 
     // ============================================================================
 
@@ -49,7 +49,7 @@ public abstract class Event {
      */
     public Event(String id) {
         this.id = id;
-    };
+    }
 
     // ============================================================================
 
@@ -65,7 +65,7 @@ public abstract class Event {
      */
     public boolean equals(Event event, Metadata data, Parameter param) {
         return event != null ? id.compareTo(event.toString()) == 0 : false;
-    };
+    }
 
     // ============================================================================
 

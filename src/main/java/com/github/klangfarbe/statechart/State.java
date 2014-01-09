@@ -54,6 +54,15 @@ public class State {
     // METHODS
     // ============================================================================
     /**
+     * Creates a state without any actions.
+     * 
+     * @throws StatechartException
+     */
+    public State(String name, Context parent) throws StatechartException {
+        this(name, parent, null, null, null);
+    }
+
+    /**
      * Creates a state with the given actions.
      * 
      * @throws StatechartException

@@ -29,5 +29,5 @@ public class Parameter {
      * Creates a parameter
      */
     public Parameter() {
-    };
+    }
 }

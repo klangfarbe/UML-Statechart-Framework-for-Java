@@ -37,6 +37,15 @@ public class ConcurrentState extends Context {
     // METHODS
     // ============================================================================
     /**
+     * Creates a simple OR-composite-state without any actions.
+     * 
+     * @throws StatechartException
+     */
+    public ConcurrentState(String name, Context parent) throws StatechartException {
+        this(name, parent, null, null, null);
+    }
+
+    /**
      * Creates a simple OR-composite-state with the given actions.
      * 
      * @throws StatechartException

@@ -99,7 +99,7 @@ public class Transition {
      */
     boolean hasEvent() {
         return event != null ? true : false;
-    };
+    }
 
     // ============================================================================
 
@@ -108,7 +108,7 @@ public class Transition {
      */
     boolean hasGuard() {
         return guard != null ? true : false;
-    };
+    }
 
     // ============================================================================
 
@@ -117,7 +117,7 @@ public class Transition {
      */
     boolean hasAction() {
         return action != null ? true : false;
-    };
+    }
 
     // ============================================================================
 

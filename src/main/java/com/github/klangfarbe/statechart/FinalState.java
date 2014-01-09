@@ -30,5 +30,5 @@ public class FinalState extends State {
      */
     public FinalState(String name, Context parent) throws StatechartException {
         super(name, parent, null, null, null);
-    };
+    }
 }
