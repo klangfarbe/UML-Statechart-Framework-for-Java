@@ -261,9 +261,15 @@ public class Statechart extends Context implements Runnable {
     /**
      * Since every state must have a unique name, it is possible to get the
      * state object by name.
+     * 
+     * @throws StatechartException
      */
-    public final State getStateByName(String string) {
-        return states.get(string);
+    public final State getStateByName(String stateName) throws StatechartException {
+        State state = states.get(stateName);
+        if (state == null) {
+            throw new StatechartException("Could not find state <" + stateName + ">.");
+        }
+        return state;
     }
 
     // ============================================================================

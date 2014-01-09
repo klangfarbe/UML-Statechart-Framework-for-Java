@@ -21,6 +21,7 @@ package com.github.klangfarbe.statechart;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Describes runtime specific data of the statechart. The main data is the
@@ -33,6 +34,8 @@ public class Metadata {
     // ============================================================================
     // ATTRIBUTES
     // ============================================================================
+    private Statechart statechart;
+
     /** Keymap which holds the StateRuntimedata of a state */
     private Map<State, StateRuntimedata> activeStates = new HashMap<State, StateRuntimedata>();
 
@@ -48,13 +51,17 @@ public class Metadata {
     // ============================================================================
 
     /**
-     * Checks wether the given state is active or not.
+     * Checks whether the given state is active or not.
      */
     public boolean isActive(State state) {
         if (activeStates.containsKey(state)) {
             return getData(state).active;
         }
         return false;
+    }
+
+    public boolean isActive(String name) throws StatechartException {
+        return isActive(statechart.getStateByName(name));
     }
 
     // ============================================================================
@@ -75,6 +82,9 @@ public class Metadata {
      * it will be added and a new StateRuntimeData is created.
      */
     void activate(State state) {
+        if (state instanceof Statechart) {
+            this.statechart = (Statechart) state;
+        }
         StateRuntimedata data = getData(state);
         if (data == null) {
             data = new StateRuntimedata();
@@ -138,5 +148,27 @@ public class Metadata {
      */
     public void reset() {
         activeStates.clear();
+        statechart = null;
+    }
+
+    public Set<State> getActiveStates() {
+        return activeStates.keySet();
+    }
+
+    public boolean isRunning() {
+        boolean isRunning = true;
+
+        Set<State> activeStates = getActiveStates();
+        for (State state : activeStates) {
+            if (state instanceof Statechart) {
+                continue;
+            }
+            if (state instanceof PseudoState) {
+                continue;
+            }
+            isRunning = isRunning && !(state instanceof FinalState);
+        }
+
+        return isRunning;
     }
 }
