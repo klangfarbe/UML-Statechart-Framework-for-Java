@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
@@ -22,29 +22,25 @@ package statechart.unittests;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import statechart.FinalState;
-import statechart.Metadata;
-import statechart.State;
-import statechart.Statechart;
-import statechart.StatechartException;
+import statechart.*;
 
 public class SemanticTests {
-  
+
   void waitForFinalState(Statechart chart, Metadata data) {
     // Wait until the statechart reached its final state
-    State current = null; 
-    while(current == null || !(current instanceof FinalState)) {      
+    State current = null;
+    while (current == null || !(current instanceof FinalState)) {
       try {
         Thread.sleep(100);
       } catch (InterruptedException e) {
         // Ignore this...
       }
-      synchronized(data) {
+      synchronized (data) {
         current = data.getData(chart).currentState;
       }
     }
   }
-  
+
   @Test
   public void testEventQueue() throws StatechartException, InterruptedException {
     Statechart chart = TestCharts.t2();
@@ -891,16 +887,40 @@ public class SemanticTests {
     Assert.assertTrue(chart.dispatch(data, new TestEvent(3), parameter));
 
     String result =
-    // event 1
-        "D:start E:t1 A:a " +
-    // event 2
+      // event 1
+      "D:start E:t1 A:a " +
+        // event 2
         "D:a E:t2 A:a " +
-    // event 3
-        "E:t3 " + 
-    // event 4
+        // event 3
+        "E:t3 " +
+        // event 4
         "D:a E:t4 A:end";
 
     Assert.assertEquals(result, parameter.path);
+    chart.shutdown();
+  }
+
+  @Test
+  public void testSemantics31() throws StatechartException {
+    Statechart chart = TestCharts.t1();
+
+    TestParameter parameter = new TestParameter();
+    Metadata data = new Metadata();
+
+    data.addActivateObserver(evt -> {
+      State x = (State) evt.getNewValue();
+      parameter.path += "+";
+      parameter.path += x.toString();
+    });
+
+    data.addDeactivateObserver(evt -> {
+      State x = (State) evt.getNewValue();
+      parameter.path += "-";
+      parameter.path += x.toString();
+    });
+
+    Assert.assertTrue(chart.start(data, new TestParameter()));
+    Assert.assertEquals("+t1+start-start+a-a+b-b+end", parameter.path);
     chart.shutdown();
   }
 }

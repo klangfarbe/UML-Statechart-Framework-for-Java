@@ -7,18 +7,20 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
 package statechart;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,12 +35,17 @@ public class Metadata {
   //============================================================================
   // ATTRIBUTES
   //============================================================================
-  /** Keymap which holds the StateRuntimedata of a state */
+  /**
+   * Keymap which holds the StateRuntimedata of a state
+   */
   private Map<State, StateRuntimedata> activeStates = new HashMap<State, StateRuntimedata>();
-  
+
+  PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+
   //============================================================================
   // METHODS
   //============================================================================
+
   /**
    * Creates a Metadata object.
    */
@@ -61,7 +68,7 @@ public class Metadata {
 
   /**
    * Gets the runtime specific data of the state.
-   * 
+   *
    * @return The data or NULL if the state is not active
    */
   public StateRuntimedata getData(State state) {
@@ -90,6 +97,8 @@ public class Metadata {
       data = activeStates.get(state.context);
       data.currentState = state;
     }
+
+    pcs.firePropertyChange("activate", null, state);
   }
 
   //============================================================================
@@ -102,17 +111,18 @@ public class Metadata {
       StateRuntimedata data = getData(state);
 
       // If we store the history of a hierarchical state, keep it
-      if (state instanceof PseudoState 
-          && (((PseudoState)state).type == PseudoState.pseudostate_deep_history
-          || ((PseudoState)state).type == PseudoState.pseudostate_history)) {
+      if (state instanceof PseudoState
+        && (((PseudoState) state).type == PseudoState.pseudostate_deep_history
+        || ((PseudoState) state).type == PseudoState.pseudostate_history)) {
         data.active = false;
         return;
       }
-            
+
       data.timeoutEvents.clear();
       data.currentState = null;
       data = null;
       activeStates.remove(state);
+      pcs.firePropertyChange("deactivate", null, state);
     }
   }
 
@@ -135,9 +145,18 @@ public class Metadata {
   //============================================================================
 
   /**
-   * Resets the metadata object for reuse 
+   * Resets the metadata object for reuse
    */
   public void reset() {
     activeStates.clear();
+  }
+
+
+  public void addActivateObserver(PropertyChangeListener l) {
+    pcs.addPropertyChangeListener("activate", l);
+  }
+
+  public void addDeactivateObserver(PropertyChangeListener l) {
+    pcs.addPropertyChangeListener("deactivate", l);
   }
 }
