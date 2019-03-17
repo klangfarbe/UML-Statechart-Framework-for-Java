@@ -34,6 +34,7 @@ public abstract class Event {
     // ============================================================================
     // METHODS
     // ============================================================================
+
     /**
      * Creates an event
      */
@@ -44,7 +45,7 @@ public abstract class Event {
 
     /**
      * Creates an event with a given id
-     * 
+     *
      * @param id
      */
     public Event(String id) {
@@ -55,13 +56,10 @@ public abstract class Event {
 
     /**
      * Called by the transition to check if it should handle this event.
-     * 
-     * @param event
-     *            the event to compare
-     * @param data
-     *            The runtime data object
-     * @param param
-     *            The parameter for this action
+     *
+     * @param event the event to compare
+     * @param data  The runtime data object
+     * @param param The parameter for this action
      */
     public boolean equals(Event event, Metadata data, Parameter param) {
         return event != null ? id.compareTo(event.toString()) == 0 : false;

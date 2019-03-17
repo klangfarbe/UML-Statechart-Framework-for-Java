@@ -21,14 +21,7 @@ package com.github.klangfarbe.statechart;
 
 import java.util.HashMap;
 import java.util.Vector;
-import java.util.concurrent.DelayQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.log4j.Logger;
+import java.util.concurrent.*;
 
 /**
  * The main entry point for using the statechart framework. Contains all
@@ -37,31 +30,29 @@ import org.apache.log4j.Logger;
  * will be deleted automatically.
  */
 public class Statechart extends Context implements Runnable {
-    private static final Logger LOGGER = Logger.getLogger(Statechart.class);
-
     /**
      * Creates the threads for the ThreadPoolExecutor. These threads may be
      * daemon or non-daemon threads.
      */
     class StatechartThreadFactory implements ThreadFactory {
-        // ============================================================================
+        // ========================================================================
         // ATTRIBUTES
-        // ============================================================================
+        // ========================================================================
         private String id;
         private int threadCount = 0;
         private boolean makeDaemonThreads = false;
         private ThreadGroup threadGroup = null;
 
-        // ============================================================================
+        // ========================================================================
         // METHODS
-        // ============================================================================
+        // ========================================================================
         public StatechartThreadFactory(String id, boolean makeDaemonThreads) {
             this.makeDaemonThreads = makeDaemonThreads;
             this.id = id;
             threadGroup = new ThreadGroup(id);
         }
 
-        // ==========================================================================
+        // ========================================================================
 
         @Override
         public Thread newThread(Runnable r) {
@@ -87,18 +78,16 @@ public class Statechart extends Context implements Runnable {
     // ============================================================================
     // METHODS
     // ============================================================================
+
     /**
      * Creates the Statechart with the given default and maximum number of
      * threads.
-     * 
-     * @param name
-     *            The name of the statechart. This must be unique for all
-     *            statecharts in the running JVM.
-     * @param threads
-     *            The maximum number of threads available in the threadpool.
-     * @param makeDaemonThreads
-     *            Specifies if the created threads should be daemon or
-     *            non-daemon threads.
+     *
+     * @param name              The name of the statechart. This must be unique for all
+     *                          statecharts in the running JVM.
+     * @param threads           The maximum number of threads available in the threadpool.
+     * @param makeDaemonThreads Specifies if the created threads should be daemon or
+     *                          non-daemon threads.
      * @throws StatechartException
      */
     public Statechart(String name, int threads, boolean makeDaemonThreads) throws StatechartException {
@@ -116,7 +105,7 @@ public class Statechart extends Context implements Runnable {
     /**
      * Shutdown of the threadpool. The pool waits 60 seconds at most before
      * shutting down hard.
-     * 
+     *
      * @throws InterruptedException
      */
     public synchronized void shutdown() {
@@ -252,7 +241,6 @@ public class Statechart extends Context implements Runnable {
      */
     public void dispatchAsynchron(Metadata data, Event event, Parameter parameter) {
         if (!threadpool.isShutdown()) {
-            LOGGER.debug("Received event '" + event + "'.");
             if (event instanceof TimeoutEvent) {
                 timeoutEventQueue.add(new EventQueueEntry(this, this, data, event, parameter, ((TimeoutEvent) event).getTimout()));
             } else {
@@ -266,7 +254,7 @@ public class Statechart extends Context implements Runnable {
     /**
      * Since every state must have a unique name, it is possible to get the
      * state object by name.
-     * 
+     *
      * @throws StatechartException
      */
     public final State getStateByName(String stateName) throws StatechartException {
@@ -280,6 +268,7 @@ public class Statechart extends Context implements Runnable {
     // ============================================================================
     // Inherited by Runnable
     // ============================================================================
+
     /**
      * Dequeues elements from the timeout queue and dispatches them
      */

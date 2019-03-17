@@ -36,18 +36,23 @@ public class PseudoState extends State {
     public static final int pseudostate_history = 5;
     public static final int pseudostate_deep_history = 6;
 
-    /** The type of this state */
+    /**
+     * The type of this state
+     */
     int type;
 
-    /** Incoming transitions (needed for join) */
+    /**
+     * Incoming transitions (needed for join)
+     */
     Vector<Transition> incoming = null;
 
     // ============================================================================
     // METHODS
     // ============================================================================
+
     /**
      * Creates a pseudo state with the given type.
-     * 
+     *
      * @throws StatechartException
      */
     public PseudoState(String name, Context parent, int type) throws StatechartException {
@@ -80,7 +85,9 @@ public class PseudoState extends State {
      */
     public int getType() {
         return type;
-    };
+    }
+
+    ;
 
     // ============================================================================
 

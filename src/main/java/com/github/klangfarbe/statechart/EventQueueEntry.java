@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * The entry for an asynchronous dispatched event. If necessary the execution of
  * the event can be delayed for a specific amount of milliseconds.
- * 
+ *
  * @Note This class has a natrual ordering that is inconsistant with equals.
  */
 public class EventQueueEntry implements Runnable, Delayed {

@@ -25,7 +25,7 @@ package com.github.klangfarbe.statechart;
 public class FinalState extends State {
     /**
      * Creates a new Finalstate.
-     * 
+     *
      * @throws StatechartException
      */
     public FinalState(String name, Context parent) throws StatechartException {

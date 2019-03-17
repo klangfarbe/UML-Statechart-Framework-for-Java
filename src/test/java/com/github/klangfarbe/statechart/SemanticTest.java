@@ -23,7 +23,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class SemanticTests {
+public class SemanticTest {
 
     void waitForFinalState(Statechart chart, Metadata data) {
         // Wait until the statechart reached its final state
@@ -812,8 +812,8 @@ public class SemanticTests {
         chart.shutdown();
     }
 
-  // Checks the deep history state when the transition is made from the substate
-  // Be aware that this does not work with a correct semantics but we make sure
+    // Checks the deep history state when the transition is made from the substate
+    // Be aware that this does not work with a correct semantics but we make sure
     // that no NullPointerException occurs. See commit 575482c6 for information
     @Test
     @Ignore
@@ -850,16 +850,16 @@ public class SemanticTests {
         Assert.assertTrue(chart.start(data, parameter));
         waitForFinalState(chart, data);
 
-    String result =
-        "D:start A:p " + 
-            "A:p-r1 A:start p-r1 D:start p-r1 A:a " + 
-            "A:p-r2 A:start p-r2 D:start p-r2 A:b " + 
-            "D:b E:t2 A:end p-r2 " + 
-            "D:a E:t1 A:end p-r1 " + 
-            "D:end p-r1 D:p-r1 " + 
-            "D:end p-r2 D:p-r2 " + 
-            "D:p " + 
-            "A:end";
+        String result =
+                "D:start A:p " +
+                        "A:p-r1 A:start p-r1 D:start p-r1 A:a " +
+                        "A:p-r2 A:start p-r2 D:start p-r2 A:b " +
+                        "D:b E:t2 A:end p-r2 " +
+                        "D:a E:t1 A:end p-r1 " +
+                        "D:end p-r1 D:p-r1 " +
+                        "D:end p-r2 D:p-r2 " +
+                        "D:p " +
+                        "A:end";
 
         Assert.assertEquals(result, parameter.path);
         chart.shutdown();
@@ -876,14 +876,14 @@ public class SemanticTests {
         Assert.assertTrue(chart.dispatch(data, new TestEvent(3), parameter));
 
         String result =
-        // event 1
-        "D:start E:t1 A:a " +
-        // event 2
-                "D:a E:t2 A:a " +
-                // event 3
-                "E:t3 " +
-                // event 4
-                "D:a E:t4 A:end";
+                // event 1
+                "D:start E:t1 A:a " +
+                        // event 2
+                        "D:a E:t2 A:a " +
+                        // event 3
+                        "E:t3 " +
+                        // event 4
+                        "D:a E:t4 A:end";
 
         Assert.assertEquals(result, parameter.path);
         chart.shutdown();

@@ -37,11 +37,11 @@ public class TimeoutEvent extends Event {
     // ============================================================================
     // METHODS
     // ============================================================================
+
     /**
      * Creates a timeout event.
-     * 
-     * @param timeout
-     *            The timeout value in milliseconds
+     *
+     * @param timeout The timeout value in milliseconds
      */
     public TimeoutEvent(long timeout) {
         super("TimeoutEvent");
@@ -53,13 +53,10 @@ public class TimeoutEvent extends Event {
     /**
      * Checks if the timevalue in the given parameter is larger than the one
      * stored in this event.
-     * 
-     * @param event
-     *            the event to compare
-     * @param data
-     *            The runtime data object
-     * @param param
-     *            The parameter for this event. Must be a TimeoutParameter type.
+     *
+     * @param event the event to compare
+     * @param data  The runtime data object
+     * @param param The parameter for this event. Must be a TimeoutParameter type.
      */
     @Override
     public boolean equals(Event event, Metadata data, Parameter param) {

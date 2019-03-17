@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 /**
  * Describes runtime specific data of the statechart. The main data is the
  * currently active state, or in general all actives when using hierarchy. For
@@ -35,19 +33,21 @@ import org.apache.log4j.Logger;
  * object is allocated only when the state is active, otherwise it is deleted.
  */
 public class Metadata {
-  //============================================================================
+    // ============================================================================
     // ATTRIBUTES
     // ============================================================================
     private Statechart statechart;
 
-    /** Keymap which holds the StateRuntimedata of a state */
+    /**
+     * Keymap which holds the StateRuntimedata of a state
+     */
     private Map<State, StateRuntimedata> activeStates = new HashMap<State, StateRuntimedata>();
 
-  PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-  //============================================================================
+    //============================================================================
     // METHODS
-  //============================================================================
+    //============================================================================
 
     /**
      * Creates a Metadata object.
@@ -55,7 +55,7 @@ public class Metadata {
     public Metadata() {
     }
 
-  //============================================================================
+    //============================================================================
 
     /**
      * Checks whether the given state is active or not.
@@ -67,26 +67,28 @@ public class Metadata {
         return false;
     }
 
+    // ============================================================================
+
     public boolean isActive(String name) throws StatechartException {
         return isActive(statechart.getStateByName(name));
     }
 
-  //============================================================================
+    // ============================================================================
 
     /**
      * Gets the runtime specific data of the state.
-   *
+     *
      * @return The data or NULL if the state is not active
      */
     public StateRuntimedata getData(State state) {
         return activeStates.get(state);
     }
 
-  //============================================================================
+    // ============================================================================
 
     /**
-   * Activates a state for this Metadata. If the state is not in the Hashmap it
-   * will be added and a new StateRuntimeData is created.
+     * Activates a state for this Metadata. If the state is not in the Hashmap it
+     * will be added and a new StateRuntimeData is created.
      */
     void activate(State state) {
         if (state instanceof Statechart) {
@@ -108,10 +110,10 @@ public class Metadata {
             data.currentState = state;
         }
 
-    pcs.firePropertyChange("activate", null, state);
+        pcs.firePropertyChange("activate", null, state);
     }
 
-  //============================================================================
+    // ============================================================================
 
     /**
      * Deactivates the state and frees the allocated resources.
@@ -122,8 +124,8 @@ public class Metadata {
 
             // If we store the history of a hierarchical state, keep it
             if (state instanceof PseudoState
-        && (((PseudoState) state).type == PseudoState.pseudostate_deep_history
-        || ((PseudoState) state).type == PseudoState.pseudostate_history)) {
+                    && (((PseudoState) state).type == PseudoState.pseudostate_deep_history
+                    || ((PseudoState) state).type == PseudoState.pseudostate_history)) {
                 data.active = false;
                 return;
             }
@@ -132,16 +134,16 @@ public class Metadata {
             data.currentState = null;
             data = null;
             activeStates.remove(state);
-      pcs.firePropertyChange("deactivate", null, state);
+            pcs.firePropertyChange("deactivate", null, state);
         }
     }
 
-  //============================================================================
+    // ============================================================================
 
     /**
      * Gets the runtime data for a state. The difference to the normal getData
-   * method is, that a new StateRuntimedata is created if it don't exists in the
-   * hashmap. If the data already exists, it is returned instead.
+     * method is, that a new StateRuntimedata is created if it don't exists in the
+     * hashmap. If the data already exists, it is returned instead.
      */
     StateRuntimedata createRuntimedata(State s) {
         StateRuntimedata data = activeStates.get(s);
@@ -152,7 +154,7 @@ public class Metadata {
         return data;
     }
 
-  //============================================================================
+    // ============================================================================
 
     /**
      * Resets the metadata object for reuse
@@ -162,9 +164,13 @@ public class Metadata {
         statechart = null;
     }
 
+    // ============================================================================
+
     public Set<State> getActiveStates() {
         return activeStates.keySet();
     }
+
+    // ============================================================================
 
     public boolean isRunning() {
         boolean isRunning = true;
@@ -183,12 +189,16 @@ public class Metadata {
         return isRunning;
     }
 
-  public void addActivateObserver(PropertyChangeListener l) {
-    pcs.addPropertyChangeListener("activate", l);
-  }
+    // ============================================================================
 
-  public void addDeactivateObserver(PropertyChangeListener l) {
-    pcs.addPropertyChangeListener("deactivate", l);
-  }
+    public void addActivateObserver(PropertyChangeListener l) {
+        pcs.addPropertyChangeListener("activate", l);
+    }
+
+    // ============================================================================
+
+    public void addDeactivateObserver(PropertyChangeListener l) {
+        pcs.addPropertyChangeListener("deactivate", l);
+    }
 
 }

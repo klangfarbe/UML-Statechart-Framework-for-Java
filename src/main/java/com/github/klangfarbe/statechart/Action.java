@@ -25,11 +25,9 @@ package com.github.klangfarbe.statechart;
 public interface Action {
     /**
      * Called by the state or transition.
-     * 
-     * @param data
-     *            The runtime data object
-     * @param param
-     *            The parameter for this action
+     *
+     * @param data  The runtime data object
+     * @param param The parameter for this action
      */
     void execute(Metadata data, Parameter param);
 }

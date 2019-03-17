@@ -36,9 +36,10 @@ public class ConcurrentState extends Context {
     // ============================================================================
     // METHODS
     // ============================================================================
+
     /**
      * Creates a simple OR-composite-state without any actions.
-     * 
+     *
      * @throws StatechartException
      */
     public ConcurrentState(String name, Context parent) throws StatechartException {
@@ -47,7 +48,7 @@ public class ConcurrentState extends Context {
 
     /**
      * Creates a simple OR-composite-state with the given actions.
-     * 
+     *
      * @throws StatechartException
      */
     public ConcurrentState(String name, Context parent, Action entryAction, Action doAction, Action exitAction) throws StatechartException {
@@ -58,7 +59,7 @@ public class ConcurrentState extends Context {
 
     /**
      * Adds a new region
-     * 
+     *
      * @throws StatechartException
      */
     void addRegion(HierarchicalState region) {
