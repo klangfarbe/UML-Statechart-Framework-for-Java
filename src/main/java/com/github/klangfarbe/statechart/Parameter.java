@@ -17,30 +17,17 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
-package statechart.unittests;
+package com.github.klangfarbe.statechart;
 
-import statechart.Event;
-import statechart.Metadata;
-import statechart.Parameter;
-
-public class TestEvent extends Event {
-  TestEvent(int i) {
-    this.i = i;
-  }
-
-  public boolean equals(Event event, Metadata data, Parameter param) {
-    if(event instanceof TestEvent) {
-      TestEvent e = (TestEvent) event;
-      if (e != null) {
-        return e.getNumber() == i;
-      }
+/**
+ * Baseclass for call parameter. All Parameters must have the ability to store
+ * the current time of the active state. This value is set by every state
+ * itself.
+ */
+public class Parameter {
+    /**
+     * Creates a parameter
+     */
+    public Parameter() {
     }
-    return false;
-  }
-
-  int getNumber() {
-    return i;
-  }
-
-  private int i;
 }

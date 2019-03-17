@@ -23,6 +23,9 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
 
 /**
  * Describes runtime specific data of the statechart. The main data is the
@@ -33,124 +36,152 @@ import java.util.Map;
  */
 public class Metadata {
   //============================================================================
-  // ATTRIBUTES
-  //============================================================================
-  /**
-   * Keymap which holds the StateRuntimedata of a state
-   */
-  private Map<State, StateRuntimedata> activeStates = new HashMap<State, StateRuntimedata>();
+    // ATTRIBUTES
+    // ============================================================================
+    private Statechart statechart;
+
+    /** Keymap which holds the StateRuntimedata of a state */
+    private Map<State, StateRuntimedata> activeStates = new HashMap<State, StateRuntimedata>();
 
   PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
   //============================================================================
-  // METHODS
+    // METHODS
   //============================================================================
 
-  /**
-   * Creates a Metadata object.
-   */
-  public Metadata() {
-  }
-
-  //============================================================================
-
-  /**
-   * Checks wether the given state is active or not.
-   */
-  public boolean isActive(State state) {
-    if (activeStates.containsKey(state)) {
-      return getData(state).active;
+    /**
+     * Creates a Metadata object.
+     */
+    public Metadata() {
     }
-    return false;
-  }
 
   //============================================================================
 
-  /**
-   * Gets the runtime specific data of the state.
+    /**
+     * Checks whether the given state is active or not.
+     */
+    public boolean isActive(State state) {
+        if (activeStates.containsKey(state)) {
+            return getData(state).active;
+        }
+        return false;
+    }
+
+    public boolean isActive(String name) throws StatechartException {
+        return isActive(statechart.getStateByName(name));
+    }
+
+  //============================================================================
+
+    /**
+     * Gets the runtime specific data of the state.
    *
-   * @return The data or NULL if the state is not active
-   */
-  public StateRuntimedata getData(State state) {
-    return activeStates.get(state);
-  }
+     * @return The data or NULL if the state is not active
+     */
+    public StateRuntimedata getData(State state) {
+        return activeStates.get(state);
+    }
 
   //============================================================================
 
-  /**
+    /**
    * Activates a state for this Metadata. If the state is not in the Hashmap it
    * will be added and a new StateRuntimeData is created.
-   */
-  void activate(State state) {
-    StateRuntimedata data = getData(state);
-    if (data == null) {
-      data = new StateRuntimedata();
-      activeStates.put(state, data);
-    }
+     */
+    void activate(State state) {
+        if (state instanceof Statechart) {
+            this.statechart = (Statechart) state;
+        }
+        StateRuntimedata data = getData(state);
+        if (data == null) {
+            data = new StateRuntimedata();
+            activeStates.put(state, data);
+        }
 
-    data.active = true;
-    data.currentTime = System.currentTimeMillis();
-    data.currentState = null;
+        data.active = true;
+        data.currentTime = System.currentTimeMillis();
+        data.currentState = null;
 
-    // update the context. if context is null we are at top level
-    if (state.context != null) {
-      data = activeStates.get(state.context);
-      data.currentState = state;
-    }
+        // update the context. if context is null we are at top level
+        if (state.context != null) {
+            data = activeStates.get(state.context);
+            data.currentState = state;
+        }
 
     pcs.firePropertyChange("activate", null, state);
-  }
+    }
 
   //============================================================================
 
-  /**
-   * Deactivates the state and frees the allocated resources.
-   */
-  void deactivate(State state) {
-    if (activeStates.containsKey(state)) {
-      StateRuntimedata data = getData(state);
+    /**
+     * Deactivates the state and frees the allocated resources.
+     */
+    void deactivate(State state) {
+        if (activeStates.containsKey(state)) {
+            StateRuntimedata data = getData(state);
 
-      // If we store the history of a hierarchical state, keep it
-      if (state instanceof PseudoState
+            // If we store the history of a hierarchical state, keep it
+            if (state instanceof PseudoState
         && (((PseudoState) state).type == PseudoState.pseudostate_deep_history
         || ((PseudoState) state).type == PseudoState.pseudostate_history)) {
-        data.active = false;
-        return;
-      }
+                data.active = false;
+                return;
+            }
 
-      data.timeoutEvents.clear();
-      data.currentState = null;
-      data = null;
-      activeStates.remove(state);
+            data.timeoutEvents.clear();
+            data.currentState = null;
+            data = null;
+            activeStates.remove(state);
       pcs.firePropertyChange("deactivate", null, state);
+        }
     }
-  }
 
   //============================================================================
 
-  /**
-   * Gets the runtime data for a state. The difference to the normal getData
+    /**
+     * Gets the runtime data for a state. The difference to the normal getData
    * method is, that a new StateRuntimedata is created if it don't exists in the
    * hashmap. If the data already exists, it is returned instead.
-   */
-  StateRuntimedata createRuntimedata(State s) {
-    StateRuntimedata data = activeStates.get(s);
-    if (data == null) {
-      data = new StateRuntimedata();
-      activeStates.put(s, data);
+     */
+    StateRuntimedata createRuntimedata(State s) {
+        StateRuntimedata data = activeStates.get(s);
+        if (data == null) {
+            data = new StateRuntimedata();
+            activeStates.put(s, data);
+        }
+        return data;
     }
-    return data;
-  }
 
   //============================================================================
 
-  /**
-   * Resets the metadata object for reuse
-   */
-  public void reset() {
-    activeStates.clear();
-  }
+    /**
+     * Resets the metadata object for reuse
+     */
+    public void reset() {
+        activeStates.clear();
+        statechart = null;
+    }
 
+    public Set<State> getActiveStates() {
+        return activeStates.keySet();
+    }
+
+    public boolean isRunning() {
+        boolean isRunning = true;
+
+        Set<State> activeStates = getActiveStates();
+        for (State state : activeStates) {
+            if (state instanceof Statechart) {
+                continue;
+            }
+            if (state instanceof PseudoState) {
+                continue;
+            }
+            isRunning = isRunning && !(state instanceof FinalState);
+        }
+
+        return isRunning;
+    }
 
   public void addActivateObserver(PropertyChangeListener l) {
     pcs.addPropertyChangeListener("activate", l);
@@ -159,4 +190,5 @@ public class Metadata {
   public void addDeactivateObserver(PropertyChangeListener l) {
     pcs.addPropertyChangeListener("deactivate", l);
   }
+
 }

@@ -17,19 +17,18 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
-package statechart;
+package com.github.klangfarbe.statechart;
 
 /**
- * Interface for an action which can be called by a transition or state.
+ * The final state of a statechart or substate
  */
-public interface Action {
-  /**
-   * Called by the state or transition.
-   * 
-   * @param data
-   *          The runtime data object
-   * @param param
-   *          The parameter for this action
-   */
-  void execute(Metadata data, Parameter param);
+public class FinalState extends State {
+    /**
+     * Creates a new Finalstate.
+     * 
+     * @throws StatechartException
+     */
+    public FinalState(String name, Context parent) throws StatechartException {
+        super(name, parent, null, null, null);
+    }
 }

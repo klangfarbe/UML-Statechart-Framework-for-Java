@@ -17,24 +17,19 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
-package statechart.unittests;
+package com.github.klangfarbe.statechart;
 
-import statechart.Guard;
-import statechart.Metadata;
-import statechart.Parameter;
-
-public class TestGuard implements Guard {
-  TestGuard(int i) {
-    this.i = i;
-  }
-
-  public boolean check(Metadata data, Parameter param) {
-    TestParameter p = (TestParameter) param;
-    if (p != null) {
-      return p.guardvalue == i;
-    }
-    return false;
-  };
-
-  private int i;
+/**
+ * Interface for an action which can be called by a transition or state.
+ */
+public interface Action {
+    /**
+     * Called by the state or transition.
+     * 
+     * @param data
+     *            The runtime data object
+     * @param param
+     *            The parameter for this action
+     */
+    void execute(Metadata data, Parameter param);
 }

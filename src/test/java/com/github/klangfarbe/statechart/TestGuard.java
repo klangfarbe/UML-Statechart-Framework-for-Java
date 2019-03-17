@@ -17,11 +17,22 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
-package statechart.unittests;
+package com.github.klangfarbe.statechart;
 
-import statechart.Parameter;
 
-public class TestParameter extends Parameter {
-    String path = new String();
-    int guardvalue = 0;
+public class TestGuard implements Guard {
+    TestGuard(int i) {
+        this.i = i;
+    }
+
+    @Override
+    public boolean check(Metadata data, Parameter param) {
+        TestParameter p = (TestParameter) param;
+        if (p != null) {
+            return p.guardvalue == i;
+        }
+        return false;
+    };
+
+    private int i;
 }

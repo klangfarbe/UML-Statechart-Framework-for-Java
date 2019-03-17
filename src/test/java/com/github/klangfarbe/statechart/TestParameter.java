@@ -17,17 +17,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
-package statechart;
+package com.github.klangfarbe.statechart;
 
-/**
- * The final state of a statechart or substate
- */
-public class FinalState extends State {
-  /**
-   * Creates a new Finalstate.
-   * @throws StatechartException 
-   */
-  public FinalState(String name, Context parent) throws StatechartException {
-    super(name, parent, null, null, null);
-  };
+
+public class TestParameter extends Parameter {
+    String path = new String();
+    int guardvalue = 0;
 }
