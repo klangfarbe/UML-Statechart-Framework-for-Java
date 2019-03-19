@@ -193,9 +193,11 @@ After the diagram is modelled we need to recognize the runtime-specific data we 
 
 All your data is stored in a separate object to make sure the infrastructure of the statechart can be used by more than one thread. This object must be a derivation of the base class Metadata:
 
-    public class MyMetadata extends Metadata {
-      public int value = 0;
-    }
+```java
+public class MyMetadata extends Metadata {
+  public int value = 0;
+}
+```
 
 **And again the warning:** Make sure you never store data which will be modified in any way in your actions and guards because they are accessed concurrently!
 
@@ -203,16 +205,20 @@ All your data is stored in a separate object to make sure the infrastructure of 
 
 The next step is to create all events used in the statechart. In this example we have two events `anEvent` and `anotherEvent`. Events are represented via the base class Event. Creating your events is simply done by deriving a class. A default implementation is given so you normaly don´t need to implement something.
 
-    public class anEvent extends Event {}
-    public class anotherEvent extends Event {}
+```java
+public class anEvent extends Event {}
+public class anotherEvent extends Event {}
+```
 
 Every event can store a string as an _id_ and can get with the `toString`-method:
 
-    public class anEvent extends Event {
-      public anEvent() {
-        super("anEvent");
-      }
-    }
+```java
+public class anEvent extends Event {
+  public anEvent() {
+    super("anEvent");
+  }
+}
+```
 
 You may noticed that we did not specify the time event used in the concurrent-state. As you will see later, this is not necessary.
 
@@ -220,31 +226,37 @@ You may noticed that we did not specify the time event used in the concurrent-st
 
 Transitions and states will trigger an action by invoking the `execute`-method from the interface. So for each action specified in the statechart we need a class implementing this interface and overwrite the execute-method. In our example we have the actions `SetValue`, `DecrementValue` and `print`. The implementation is pretty simple:
 
-    public class SetValue extends Action {
-      private int value;
-      public SetValue(int value) {
-        this.value = value;
-      }
-      public void execute(Metadata data, Parameter parameter) {
-        data.value = value;
-      }
-    }
+```java
+public class SetValue extends Action {
+  private int value;
 
-    public class DecrementValue extends Action {
-      public void execute(Metadata data, Parameter parameter) {
-        data.value--;
-      }
-    }
+  public SetValue(int value) {
+    this.value = value;
+  }
 
-    public class Print extends Action {
-      private string value;
-      public Print(string value) {
-        this.value = value;
-      }
-      public void execute(Metadata data, Parameter parameter) {
-        System.out.println(value);
-      }
-    }
+  public void execute(Metadata data, Parameter parameter) {
+    data.value = value;
+  }
+}
+
+public class DecrementValue extends Action {
+  public void execute(Metadata data, Parameter parameter) {
+    data.value--;
+  }
+}
+
+public class Print extends Action {
+  private string value;
+
+  public Print(string value) {
+    this.value = value;
+  }
+
+  public void execute(Metadata data, Parameter parameter) {
+    System.out.println(value);
+  }
+}
+```
 
 When dispatching an event you can use the parameter class (or exactly a derivation of it) to send call-parameter to the action. Another important thing is that an action must never dispatch a synchronous call event on the statechart. This may lead to unspecified behaviour! That means never call the dispatch method from the statechart in the execute method. If you need your action to trigger an event do this using the event queue to dispatch an asynchronous signal-event. In the implementation you will use `statechart.dispatchAsynchron` instead of `statechart.dispatch`.
 
@@ -257,15 +269,19 @@ Guards are implemented - I think you guess it - by implementing the interface `G
 
 Our only guard in the example is a simple check of the integer value stored in the data object:
 
-    public class ValueEquals extends Guard {
-      private int value;
-      public ValueEquals(int value) {
-       this.value = value;
-      }
-      public boolean check(Metadata data, Parameter parameter) {
-        return data.value == value;
-      }
-    }
+```java
+public class ValueEquals extends Guard {
+  private int value;
+
+  public ValueEquals(int value) {
+   this.value = value;
+  }
+
+  public boolean check(Metadata data, Parameter parameter) {
+    return data.value == value;
+  }
+}
+```
 
 The `else`-guard is just a `meta`-guard, that means it is only shown in the diagram but not represented in the statechart implementation. Every transition with an `else`-guard does not have any kind of guard at all in the implementation.
 
@@ -275,46 +291,48 @@ After we have created the specific elements we can start building the statechart
 
 When you allocate the statechart you can specify the number of worker threads for the `event`- and `timeout-event`-queue. The main difference is that the normal event-queue implements a fifo handling and makes sure that only one event per metadata is dispatched with the worker threads at a time while the timeout-event-queue is only internally used for implementing the timeout-event semantics. If a state is activated it will automatically trigger timeout-events for each outgoing transition associated with this kind of event and removes it from the queue when the state is deactivated. The following code represents the states of the diagram:
 
-    // Create the statechart and top-level states
-    Statechart chart = new Statechart();
-    PseudoState start = new PseudoState(chart, PseudoState.pseudostate_start);
-    FinalState final = new FinalState(chart);
-    HierarchicalState a = new HierarchicalState(chart, new SetValue(10), null, null);
+```java
+// Create the statechart and top-level states
+Statechart chart = new Statechart();
+PseudoState state_start = new PseudoState("start", chart, PseudoState.pseudostate_start);
+FinalState state_final = new FinalState("final", chart);
+HierarchicalState state_a = new HierarchicalState("a", chart, new SetValue(10), null, null);
 
-    // create substates of the or-state a
-    State b = new State(a, null, null, null);
-    PseudoState j = new PseudoState(a, PseudoState.pseudostate_junction);
-    FinalState a_final = new FinalState(a);
-    ConcurrentState c = new ConcurrentState(a, null, null, null);
+// create substates of the or-state a
+State state_b = new State("b", state_a);
+PseudoState state_j = new PseudoState("j", state_a, PseudoState.pseudostate_junction);
+FinalState state_a_final = new FinalState("a_final", state_a);
+ConcurrentState state_c = new ConcurrentState("c", state_a);
 
-    // region 1 of the and-state
-    HierarchicalState c_r1 = new HierarchicalState(c, null, null, null);
-    PseudoState c_r1_start = new PseudoState(c_r1, PseudoState.pseudostate_start);
-    State d = new State(c_r1,
-        new Print("Concurrent state activated"), null,
-        new Print("Concurrent state deactivated"));
+// region 1 of the and-state
+HierarchicalState state_c_r1 = new HierarchicalState("c_r1", state_c);
+PseudoState state_c_r1_start = new PseudoState("c_r1_start", state_c_r1, PseudoState.pseudostate_start);
+State state_d = new State("d", state_c_r1, new Print("c_r1 active"), null, new Print("c_r1 inactive"));
 
-    // region 2 of the and-state
-    HierarchicalState c_r2 = new HierarchicalState(c, null, null, null);
-    PseudoState c_r2_start = new PseudoState(c_r2, PseudoState.pseudostate_start);
-    State e = new State(c_r2, new Print("start timeout"), null, null);
-    State f = new State(c_r2, new DecrementValue(), null, null);
+// region 2 of the and-state
+HierarchicalState state_c_r2 = new HierarchicalState("c_r2", state_c, null, null, null);
+PseudoState state_c_r2_start = new PseudoState("c_r2_start", state_c_r2, PseudoState.pseudostate_start);
+State state_e = new State("e", state_c_r2, new Print("start timeout"), null, null);
+State state_f = new State("f", state_c_r2, new DecrementValue(), null, null);
+```
 
 If you want you can give every state a name as an identifier. This is strongly recommended because it simplifies the debugging.
 
 After all states are created we must create the transitions. It is important that you create the transitions after the states because the transition-constructor need the state-hierarchy.
 
-    // create the transitions
-    new Transition(start, b);
-    new Transition(b, c);
-    new Transition(c_r1_start, d);
-    new Transition(c_r2_start, e);
-    new Transition(e, f, new TimeoutEvent(1000), new Print("Timeout"));
-    new Transition(f, e, new AnotherEvent());
-    new Transition(c, j, new AnEvent());
-    new Transition(j, b, new ValueEquals(0));
-    new Transition(j, a_final);
-    new Transition(a, final);
+```java
+// create the transitions
+new Transition(state_start, state_b);
+new Transition(state_b, state_c);
+new Transition(state_c_r1_start, state_d);
+new Transition(state_c_r2_start, state_e);
+new Transition(state_e, state_f, new TimeoutEvent(1000), new Print("Timeout"));
+new Transition(state_f, state_e, new AnotherEvent());
+new Transition(state_c, state_j, new AnEvent());
+new Transition(state_j, state_b, new ValueEquals(0));
+new Transition(state_j, state_a_final);
+new Transition(state_a, state_final);
+```
 
 That is all you have to do to implement the statechart. The next section will explain how to use it.
 
@@ -322,18 +340,24 @@ That is all you have to do to implement the statechart. The next section will ex
 
 The created instance of the statechart can now be used for dispatching events. It is possible to use the same statechart instance with more than one metadata object. What we need to do is create a metadata object and then trigger events. You can choose between using the event queue or not. When a new Metadata object is created you must call the start-method before dispatching events.
 
-    MyMetadata myData = new MyMetadata();
-    chart.start(myData);
+```java
+MyMetadata myData = new MyMetadata();
+chart.start(myData);
+```
 
 A call of the dispatch- (and the start) method returns only if a state is reached where no outgoing transition can trigger. In our example this is the case with state `E`: You call start and the statechart runs to state `E` for this data. Then a timeout event is created internally and the `start`-method returns. When we now sleep at least 1 second `E` is de- and `F` activated. Then we trigger an event:
 
-    Thread.sleep(1500);
-    chart.dispatch(myData, new AnEvent());
+```java
+Thread.sleep(1500);
+chart.dispatch(myData, new AnEvent());
+```
 
 This is all we do for dispatching events. If you want to use the event queue just call the asynchronous dispatch and start methods:
 
-    chart.startAsynchron(myData);
-    chart.dispatchAsynchron(myData, new AnEvent());
+```java
+chart.startAsynchron(myData);
+chart.dispatchAsynchron(myData, new AnEvent());
+```
 
 ## Conclusion
 
